@@ -77,7 +77,7 @@ export default function ReceiveStockPage() {
               backgroundColor="white" 
               padding={tokens.space.medium}
               borderRadius={tokens.radii.small}
-              boxShadow={tokens.shadows.small}
+              boxShadow="0 1px 4px rgba(0,0,0,0.10)"
               justifyContent="space-between"
             >
               <View>
