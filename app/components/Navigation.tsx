@@ -147,45 +147,56 @@ export function Navigation({ children }: NavigationProps) {
 
       {/* Content area with optional drawer */}
       <Flex direction="row" flex="1" overflow="hidden">
-        {/* Navigation Drawer */}
+        {/* Navigation Drawer and Backdrop */}
         {isDrawerOpen && (
-          <Flex
-            as="nav"
-            direction="column"
-            padding={tokens.space.medium}
-            backgroundColor="#f5f5f5"
-            width="100%"
-            maxWidth="300px"
-            position="fixed"
-            height="100%"
-            style={{ zIndex: 10 }}
-            boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
-          >
-            <Heading level={3} marginBottom={tokens.space.medium}>
-              TPV System
-            </Heading>
-            
-            <Flex direction="column" gap={tokens.space.xs}>
-              {menuItems.map((item) => (
-                <Link key={item.path} href={item.path} passHref>
-                  <Button
-                    variation="menu"
-                    backgroundColor={pathname === item.path ? "#e3f2fd" : "transparent"}
-                    color="black"
-                    justifyContent="flex-start"
-                    width="100%"
-                    padding={tokens.space.small}
-                    borderRadius="0"
-                    marginBottom={tokens.space.xxs}
-                  >
-                    <Icon as={item.icon} marginRight={tokens.space.xs} /> {item.name}
-                  </Button>
-                </Link>
-              ))}
+          <>
+            {/* Backdrop overlay */}
+            <View
+              position="fixed"
+              top={0}
+              left={0}
+              width="100vw"
+              height="100vh"
+              backgroundColor="rgba(0,0,0,0.2)"
+              style={{ zIndex: 9 }}
+              onClick={toggleDrawer}
+            />
+            <Flex
+              as="nav"
+              direction="column"
+              padding={tokens.space.medium}
+              backgroundColor="#f5f5f5"
+              width="100%"
+              maxWidth="300px"
+              position="fixed"
+              height="100%"
+              style={{ zIndex: 10 }}
+              boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
+            >
+              <Heading level={3} marginBottom={tokens.space.medium}>
+                TPV System
+              </Heading>
+              <Flex direction="column" gap={tokens.space.xs}>
+                {menuItems.map((item) => (
+                  <Link key={item.path} href={item.path} passHref>
+                    <Button
+                      variation="menu"
+                      backgroundColor={pathname === item.path ? "#e3f2fd" : "transparent"}
+                      color="black"
+                      justifyContent="flex-start"
+                      width="100%"
+                      padding={tokens.space.small}
+                      borderRadius="0"
+                      marginBottom={tokens.space.xxs}
+                    >
+                      <Icon as={item.icon} marginRight={tokens.space.xs} /> {item.name}
+                    </Button>
+                  </Link>
+                ))}
+              </Flex>
             </Flex>
-          </Flex>
+          </>
         )}
-
         {/* Main Content */}
         <View as="main" flex="1" overflow="auto">
           {children}
