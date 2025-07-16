@@ -1,34 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { View, Text, Heading, useTheme, Button, Flex, TextField, Collection } from "@aws-amplify/ui-react";
-
-interface StockItem {
-  id: string;
-  description: string;
-  quantity: number;
-  timestamp: string;
-}
+import { useStockStore } from "../store";
 
 export default function ReceiveStockPage() {
   const { tokens } = useTheme();
-  const [itemCode, setItemCode] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [receivedItems, setReceivedItems] = useState<StockItem[]>([]);
+  const { 
+    itemCode, 
+    quantity, 
+    receivedItems, 
+    setItemCode, 
+    setQuantity, 
+    addReceivedItem 
+  } = useStockStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would validate and lookup the item
-    const newStockItem: StockItem = {
-      id: Math.random().toString(36).substr(2, 9),
-      description: `Item ${itemCode}`,
-      quantity: quantity,
-      timestamp: new Date().toISOString()
-    };
-    
-    setReceivedItems([newStockItem, ...receivedItems]);
-    setItemCode("");
-    setQuantity(1);
+    addReceivedItem();
   };
 
   return (

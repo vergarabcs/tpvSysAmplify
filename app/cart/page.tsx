@@ -1,49 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { View, Text, Heading, useTheme, Flex, Button, Collection, TextField } from "@aws-amplify/ui-react";
 import { MdAdd, MdRemove, MdDelete } from "react-icons/md";
-
-interface CartItem {
-  id: string;
-  description: string;
-  price: number;
-  quantity: number;
-}
+import { useCartStore } from "../store";
 
 export default function CartPage() {
   const { tokens } = useTheme();
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    { id: "1", description: "Product 1", price: 300, quantity: 2 },
-    { id: "2", description: "Product 2", price: 150, quantity: 1 }
-  ]);
-  const [customerName, setCustomerName] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
+  const { 
+    cartItems, 
+    customerInfo, 
+    updateQuantity, 
+    removeItem, 
+    getTotal,
+    setCustomerInfo
+  } = useCartStore();
 
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      // Remove item if quantity is 0 or less
-      setCartItems(cartItems.filter(item => item.id !== id));
-    } else {
-      // Update quantity
-      setCartItems(
-        cartItems.map(item => 
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    }
-  };
-
-  const removeItem = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
-
-  const calculateTotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity, 
-      0
-    );
-  };
+  // Destructure customerInfo for easier access
+  const { name, phone } = customerInfo;
 
   const handleCheckout = () => {
     alert("Processing checkout...");
@@ -125,14 +98,14 @@ export default function CartPage() {
             
             <TextField
               label="Name"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
+              value={name}
+              onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
             />
             
             <TextField
               label="Phone"
-              value={customerPhone}
-              onChange={(e) => setCustomerPhone(e.target.value)}
+              value={phone}
+              onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
             />
           </Flex>
           
@@ -145,17 +118,17 @@ export default function CartPage() {
           >
             <Flex justifyContent="space-between">
               <Text>Subtotal:</Text>
-              <Text>₱{calculateTotal()}</Text>
+              <Text>₱{getTotal()}</Text>
             </Flex>
             
             <Flex justifyContent="space-between" marginTop={tokens.space.xs}>
               <Text>Tax:</Text>
-              <Text>₱{(calculateTotal() * 0.12).toFixed(2)}</Text>
+              <Text>₱{(getTotal() * 0.12).toFixed(2)}</Text>
             </Flex>
             
             <Flex justifyContent="space-between" marginTop={tokens.space.small} fontWeight="bold">
               <Text>Total:</Text>
-              <Text>₱{(calculateTotal() * 1.12).toFixed(2)}</Text>
+              <Text>₱{(getTotal() * 1.12).toFixed(2)}</Text>
             </Flex>
           </Flex>
           

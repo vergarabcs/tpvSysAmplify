@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { 
   Flex, 
   View,
@@ -24,20 +24,21 @@ import {
   MdLogout,
   MdArrowBack
 } from "react-icons/md";
+import { useNavigationStore } from '../store';
 
 interface NavigationProps {
   children: React.ReactNode;
 }
 
 export function Navigation({ children }: NavigationProps) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isDrawerOpen, closeDrawer, toggleDrawer } = useNavigationStore();
   const pathname = usePathname();
   const { tokens } = useTheme();
 
   // Close drawer when route changes
   useEffect(() => {
-    setIsDrawerOpen(false);
-  }, [pathname]);
+    closeDrawer();
+  }, [pathname, closeDrawer]);
 
   const menuItems = [
     { name: 'Items', path: '/items', icon: MdInventory },
@@ -51,9 +52,7 @@ export function Navigation({ children }: NavigationProps) {
     { name: 'Sign Out', path: '/signout', icon: MdLogout },
   ];
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
+  // toggleDrawer is now provided by the navigation store
 
   return (
     <Flex direction="column" height="100vh">
