@@ -25,6 +25,7 @@ import {
   MdArrowBack
 } from "react-icons/md";
 import { useNavigationStore } from '../store';
+import { AppToolbar } from './AppToolbar';
 
 interface NavigationProps {
   children: React.ReactNode;
@@ -88,60 +89,8 @@ export function Navigation({ children }: NavigationProps) {
             <Icon as={MdMenu} fontSize="1.5rem" />
           </Button>
         )}
-        
-        <View as="div" width="100%" maxWidth="300px" padding={tokens.space.xs}>
-          <input 
-            type="text"
-            placeholder="Search..."
-            style={{
-              width: '100%',
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              color: 'white',
-            }}
-          />
-        </View>
-        
-        <Flex gap={tokens.space.xs}>
-          <Button 
-            aria-label="Add item"
-            backgroundColor="transparent"
-            color="white"
-            size="small"
-            variation="link"
-          >
-            <Text fontSize="1.5rem">+</Text>
-          </Button>
-          <Button 
-            aria-label="View options"
-            backgroundColor="transparent"
-            color="white"
-            size="small"
-            variation="link"
-          >
-            <Text fontSize="1.5rem">≡</Text>
-          </Button>
-          <Button 
-            aria-label="Refresh"
-            backgroundColor="transparent"
-            color="white"
-            size="small"
-            variation="link"
-          >
-            <Text fontSize="1.5rem">↻</Text>
-          </Button>
-          <Button 
-            aria-label="Print"
-            backgroundColor="transparent"
-            color="white"
-            size="small"
-            variation="link"
-          >
-            <Text fontSize="1.5rem">🖨️</Text>
-          </Button>
-        </Flex>
+        {/* Toolbar region extracted to AppToolbar */}
+        <AppToolbar />
       </Flex>
 
       {/* Content area with optional drawer */}
