@@ -25,7 +25,6 @@ Amplify.configure(outputs);
 export default function ItemsPage() {
   const { 
     items,
-    filteredItems, 
     loading,
     currentPage, 
     itemsPerPage,
@@ -45,7 +44,10 @@ export default function ItemsPage() {
     setShowDeleteModal,
     setCurrentPage
   } = useItemsStore();
-  
+
+  const searchString = useItemsStore(state => state.searchString)
+  const filteredItems = getFiltered(items, searchString)
+
   const { addItem } = useCartStore();
 
   const isMobile = useBreakpointValue({
@@ -195,4 +197,12 @@ export default function ItemsPage() {
       )}
     </View>
   );
+}
+
+function getFiltered(items: Item[], searchString: string) {
+  if (!searchString.trim()) return items;
+  const stringList = searchString.split(' ').map(word => word.toLowerCase());
+  return items.filter(item => {
+    return stringList.some(word => item.description.includes(word))
+  });
 }

@@ -45,6 +45,7 @@ interface ItemsState {
   showCreateModal: boolean;
   showEditModal: boolean;
   showDeleteModal: boolean;
+  searchString: string;
   
   // Actions
   fetchItems: () => Promise<void>;
@@ -52,6 +53,7 @@ interface ItemsState {
   updateItem: (updatedItem: Item) => Promise<void>;
   deleteItem: (id: string) => Promise<void>;
   setSelectedItem: (item: Item | null) => void;
+  setSearchString: (searchString: string) => void;
   setShowCreateModal: (show: boolean) => void;
   setShowEditModal: (show: boolean) => void;
   setShowDeleteModal: (show: boolean) => void;
@@ -71,6 +73,7 @@ export const useItemsStore = create<ItemsState>((set, get) => ({
   showCreateModal: false,
   showEditModal: false,
   showDeleteModal: false,
+  searchString: '',
   
   // Actions
   fetchItems: async () => {
@@ -103,6 +106,12 @@ export const useItemsStore = create<ItemsState>((set, get) => ({
         loading: false
       });
     }
+  },
+
+  setSearchString: (searchString) => {
+    set({
+      searchString
+    })
   },
   
   createItem: async (newItem) => {

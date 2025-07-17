@@ -5,18 +5,18 @@ import { usePathname } from 'next/navigation';
 import { useItemsStore } from '../store';
 
 interface AppToolbarProps {
-  onSearchChange?: (value: string) => void;
   onOptions?: () => void;
   onPrint?: () => void;
 }
 
 export function AppToolbar({
-  onSearchChange,
   onOptions,
   onPrint,
 }: AppToolbarProps) {
   const { tokens } = useTheme();
   const fetchItems = useItemsStore(state => state.fetchItems)
+  const setSearchString = useItemsStore(state => state.setSearchString)
+  const searchString = useItemsStore(state => state.searchString)
   const pathname = usePathname();
   const setShowCreateModal = useItemsStore(state => state.setShowCreateModal);
 
@@ -39,6 +39,7 @@ export function AppToolbar({
           <input
             type="text"
             placeholder="Search..."
+            value={searchString}
             style={{
               width: '100%',
               padding: '8px 16px',
@@ -47,7 +48,7 @@ export function AppToolbar({
               backgroundColor: 'rgba(255, 255, 255, 0.15)',
               color: 'white',
             }}
-            onChange={e => onSearchChange?.(e.target.value)}
+            onChange={e => setSearchString(e.target.value)}
           />
         </View>
       )}
