@@ -54,13 +54,12 @@ export function Navigation({ children }: NavigationProps) {
   ];
 
   // toggleDrawer is now provided by the navigation store
-
   return (
     <Flex direction="column" height="100vh">
       {/* App Bar */}
       <Flex 
         as="header" 
-        backgroundColor="#1976d2" 
+        backgroundColor={`${tokens.colors.primary[80].value}`}
         color="white" 
         padding={tokens.space.xs}
         alignItems="center"

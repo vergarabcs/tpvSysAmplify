@@ -1,6 +1,6 @@
 "use client";
 
-import { View, Flex, Button, Text, useTheme } from '@aws-amplify/ui-react';
+import { View, Flex, Button, Text, useTheme, Input } from '@aws-amplify/ui-react';
 import { usePathname } from 'next/navigation';
 import { useItemsStore } from '../store';
 
@@ -36,18 +36,11 @@ export function AppToolbar({
     <>
       {showSearch && (
         <View as="div" width="100%" maxWidth="300px" padding={tokens.space.xs}>
-          <input
+          <Input
             type="text"
             placeholder="Search..."
+            backgroundColor={tokens.colors.primary[20].value}
             value={searchString}
-            style={{
-              width: '100%',
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              color: 'white',
-            }}
             onChange={e => setSearchString(e.target.value)}
           />
         </View>
