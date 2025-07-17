@@ -18,9 +18,11 @@ import "@aws-amplify/ui-react/styles.css";
 import { CreateItemModal } from "../components/CreateItemModal";
 import { EditItemModal } from "../components/EditItemModal";
 import { DeleteItemModal } from "../components/DeleteItemModal";
+import { HighLightedText } from "../components/HighLightedText";
 import { useItemsStore, useCartStore, Item } from "../store";
 
 Amplify.configure(outputs);
+
 
 export default function ItemsPage() {
   const { 
@@ -116,7 +118,9 @@ export default function ItemsPage() {
             >
               <View flex="1" padding={tokens.space.small}>
                 <Text fontSize={tokens.fontSizes.medium} fontWeight="bold">
-                  {item.description}
+                  <HighLightedText searchString={searchString}>
+                    {item.description}
+                  </HighLightedText>
                 </Text>
               </View>
               
@@ -201,7 +205,7 @@ export default function ItemsPage() {
 
 function getFiltered(items: Item[], searchString: string) {
   if (!searchString.trim()) return items;
-  const stringList = searchString.split(' ').map(word => word.toLowerCase());
+  const stringList = searchString.split(' ').map(word => word.toLowerCase()).filter((val) => !!val);
   return items.filter(item => {
     return stringList.some(word => item.description.includes(word))
   });
