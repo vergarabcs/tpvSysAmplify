@@ -10,12 +10,11 @@ const schema = a.schema({
   Item: a
     .model({
       description: a.string(),
-      sell_price: a.float(),
-      quantity: a.float(),
-      low_stock_qty: a.float(),
+      sell_price: a.float().default(999999),
+      quantity: a.float().default(999999),
+      low_stock_qty: a.float().default(999999),
       img: a.string(),
       qr: a.string(), // S3 key or URL
-      create_date: a.datetime(),
       tags: a.string(), // comma-separated tags
     })
     .authorization((allow) => [allow.publicApiKey()])

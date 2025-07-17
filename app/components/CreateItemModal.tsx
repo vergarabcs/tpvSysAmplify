@@ -85,7 +85,6 @@ export function CreateItemModal({ isOpen, onClose, onSave }: CreateItemModalProp
         low_stock_qty: parseFloat(formData.low_stock_qty),
         img: "", // Placeholder for future implementation
         qr: "", // Placeholder for future implementation
-        create_date: new Date().toISOString(),
         tags: formData.tags,
       });
       resetForm();

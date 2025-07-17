@@ -20,7 +20,6 @@ interface Item {
   low_stock_qty: number;
   img?: string;
   qr?: string;
-  create_date: string;
   tags?: string;
 }
 

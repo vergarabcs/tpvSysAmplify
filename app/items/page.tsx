@@ -35,6 +35,7 @@ export default function ItemsPage() {
     showDeleteModal,
     error,
     fetchItems,
+    observeItems,
     createItem,
     updateItem,
     deleteItem,
@@ -57,8 +58,9 @@ export default function ItemsPage() {
   const { tokens } = useTheme();
 
   useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+    const unsubscribe = observeItems()
+    return unsubscribe
+  }, [observeItems]);
 
   const openEditModal = (item: Item) => {
     setSelectedItem(item);
