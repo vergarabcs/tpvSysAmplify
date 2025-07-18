@@ -9,7 +9,7 @@ const { DynamoDBDocumentClient, BatchWriteCommand } = require('@aws-sdk/lib-dyna
 const TABLE_NAME = 'Item-2xtj2wesdbh4xjszjgzcsrqtva-NONE';
 // CSV file path (update if needed)
 const CSV_PATH = path.resolve(__dirname, '/Users/billcarlo.vergara/Downloads/inventory.item.csv');
-const LIMIT = 5000;
+const LIMIT = 300;
 
 // AWS DynamoDB client
 const client = new DynamoDBClient({ region: 'ap-southeast-1' });
