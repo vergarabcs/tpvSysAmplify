@@ -5,14 +5,11 @@ import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import {
   Button,
-  Collection,
   Flex,
-  Pagination,
   Text,
   View,
   useBreakpointValue,
-  useTheme,
-  Image
+  useTheme
 } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { CreateItemModal } from "../components/CreateItemModal";
@@ -20,6 +17,7 @@ import { EditItemModal } from "../components/EditItemModal";
 import { DeleteItemModal } from "../components/DeleteItemModal";
 import { HighLightedText } from "../components/HighLightedText";
 import { useItemsStore, useCartStore, Item } from "../store";
+import { FixedSizeList as List } from "react-window";
 
 Amplify.configure(outputs);
 
@@ -28,14 +26,11 @@ export default function ItemsPage() {
   const { 
     items,
     loading,
-    currentPage, 
-    itemsPerPage,
     showCreateModal, 
     selectedItem,
     showEditModal,
     showDeleteModal,
     error,
-    fetchItems,
     observeItems,
     createItem,
     updateItem,
@@ -44,7 +39,6 @@ export default function ItemsPage() {
     setShowCreateModal,
     setShowEditModal,
     setShowDeleteModal,
-    setCurrentPage
   } = useItemsStore();
 
   const searchString = useItemsStore(state => state.searchString)
@@ -76,12 +70,6 @@ export default function ItemsPage() {
     setShowDeleteModal(true);
   };
 
-  // Pagination logic
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-
   return (
     <View padding={0} width="100%">
       {error && (
@@ -99,75 +87,53 @@ export default function ItemsPage() {
           <Text>No items found.</Text>
         </View>
       ) : (
-        <Collection
-          items={currentItems}
-          type="list"
-          direction="column"
-          gap="0"
-          padding="0"
+        <List
+          height={710}
+          itemCount={filteredItems.length}
+          itemSize={120}
+          width={"100%"}
+          
         >
-          {(item) => (
-            <Flex 
-              key={item.id}
-              direction="row"
-              width="100%"
-              padding={0}
-              backgroundColor="white"
-              style={{ borderBottom: "1px solid #eaeaea" }}
-              onClick={() => openEditModal(item)}
-            >
-              <View flex="1" padding={tokens.space.small}>
-                <Text fontSize={tokens.fontSizes.medium} fontWeight="bold">
-                  <HighLightedText searchString={searchString}>
-                    {item.description}
-                  </HighLightedText>
-                </Text>
-              </View>
-              
-              <Flex direction="column" padding={tokens.space.xs} justifyContent="center" alignItems="flex-end" minWidth="100px">
-                <Text fontWeight="bold">₱ {item.sell_price}</Text>
-                <Text>Qty: {item.quantity}</Text>
-                <Button 
-                  size="small"
-                  variation="primary"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent edit modal from opening
-                    addItem(item);
-                  }}
-                  marginTop={tokens.space.xs}
+          {({ index, style }) => {
+            const item = filteredItems[index];
+            return (
+              <div style={style} key={item.id}>
+                <Flex 
+                  direction="row"
+                  width="100%"
+                  padding={0}
+                  backgroundColor="white"
+                  style={{ borderBottom: "1px solid #eaeaea" }}
+                  onClick={() => openEditModal(item)}
                 >
-                  Add to Cart
-                </Button>
-              </Flex>
-              
-              <View
-                width="120px"
-                height="100px"
-                backgroundColor="#ccc"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <Text color="#666">Image</Text>
-              </View>
-            </Flex>
-          )}
-        </Collection>
-      )}
-
-      {totalPages > 1 && (
-        <Flex justifyContent="center" marginTop={tokens.space.medium}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onNext={() => setCurrentPage(currentPage + 1)}
-            onPrevious={() => setCurrentPage(currentPage - 1)}
-            onChange={(pageIndex) => pageIndex !== undefined ? setCurrentPage(pageIndex) : null}
-            siblingCount={isMobile ? 0 : 1}
-          />
-        </Flex>
+                  <View flex="1" padding={tokens.space.small}>
+                    <Text fontSize={tokens.fontSizes.medium} fontWeight="bold">
+                      <HighLightedText searchString={searchString}>
+                        {item.description}
+                      </HighLightedText>
+                    </Text>
+                  </View>
+                  <Flex direction="column" padding={tokens.space.xs} justifyContent="center" alignItems="flex-end" minWidth="100px">
+                    <Text fontWeight="bold">₱ {item.sell_price}</Text>
+                    <Text>Qty: {item.quantity}</Text>
+                  </Flex>
+                  <View
+                    width="120px"
+                    height="100px"
+                    backgroundColor="#ccc"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  >
+                    <Text color="#666">Image</Text>
+                  </View>
+                </Flex>
+              </div>
+            );
+          }}
+        </List>
       )}
 
       <CreateItemModal 
@@ -206,7 +172,22 @@ export default function ItemsPage() {
 function getFiltered(items: Item[], searchString: string) {
   if (!searchString.trim()) return items;
   const stringList = searchString.split(' ').map(word => word.toLowerCase()).filter((val) => !!val);
-  return items.filter(item => {
-    return stringList.some(word => item.description.includes(word))
+  // Map each item to its match count
+  const filteredWithMatchCount = items
+    .map(item => {
+      const descriptionLower = item.description.toLowerCase();
+      const matchCount = stringList.reduce((count, word) =>
+        descriptionLower.includes(word) ? count + 1 : count, 0
+      );
+      return { item, matchCount };
+    })
+    .filter(({ matchCount }) => matchCount > 0);
+  // Sort by match count (desc), then alphabetically
+  filteredWithMatchCount.sort((a, b) => {
+    if (b.matchCount !== a.matchCount) {
+      return b.matchCount - a.matchCount;
+    }
+    return a.item.description.localeCompare(b.item.description);
   });
+  return filteredWithMatchCount.map(({ item }) => item);
 }
