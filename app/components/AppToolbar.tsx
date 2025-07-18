@@ -3,7 +3,7 @@
 import { View, Flex, Button, Text, useTheme, Input, SearchField } from '@aws-amplify/ui-react';
 import { usePathname } from 'next/navigation';
 import { useItemsStore } from '../store';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 interface AppToolbarProps {
   onOptions?: () => void;
@@ -18,9 +18,22 @@ export function AppToolbar({
   const fetchItems = useItemsStore(state => state.fetchItems)
   const setSearchString = useItemsStore(state => state.setSearchString)
   const searchString = useItemsStore(state => state.searchString)
+  const searchWordFrequency = useItemsStore(state => state.searchWordFrequency);
   const pathname = usePathname();
   const setShowCreateModal = useItemsStore(state => state.setShowCreateModal);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Get top 20 most used words
+    if (searchWordFrequency) {
+      const sorted = Object.entries(searchWordFrequency)
+        .sort((a, b) => b[1] - a[1])
+        .map(([word]) => word)
+        .slice(0, 20);
+      setSuggestions(sorted);
+    }
+  }, [searchWordFrequency]);
 
   // Debounced search setter
   const handleSearchChange = (e: any) => {
@@ -28,7 +41,7 @@ export function AppToolbar({
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setSearchString(value);
-    }, 2000);
+    }, 1000);
   };
 
   // Example: change toolbar buttons based on page
@@ -51,9 +64,14 @@ export function AppToolbar({
             type="text"
             placeholder="Search..."
             backgroundColor={tokens.colors.primary[20].value}
-            value={searchString}
             onChange={handleSearchChange}
+            list="search-suggestions"
           />
+          <datalist id="search-suggestions">
+            {suggestions.map((word) => (
+              <option key={word} value={word} />
+            ))}
+          </datalist>
         </View>
       )}
       <Flex gap={tokens.space.xs}>

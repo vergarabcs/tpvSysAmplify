@@ -46,6 +46,8 @@ interface ItemsState {
   showEditModal: boolean;
   showDeleteModal: boolean;
   searchString: string;
+  searchHistory: string[]; // New state for search history
+  searchWordFrequency: Record<string, number>; // New state for search word frequency
   
   // Actions
   fetchItems: () => Promise<void>;
@@ -74,6 +76,8 @@ export const useItemsStore = create<ItemsState>((set, get) => ({
   showEditModal: false,
   showDeleteModal: false,
   searchString: '',
+  searchHistory: [], // Initialize search history
+  searchWordFrequency: {}, // Initialize search word frequency
   
   // Actions
   fetchItems: async () => {
@@ -109,9 +113,26 @@ export const useItemsStore = create<ItemsState>((set, get) => ({
   },
 
   setSearchString: (searchString) => {
+    // Normalize and split words
+    const normalized = searchString.trim().toLowerCase();
+    const words = normalized.split(/\s+/).filter(Boolean);
+
+    // Update search history (max 500)
+    let history = get().searchHistory || [];
+    history = [...history, normalized];
+    if (history.length > 500) history = history.slice(history.length - 500);
+
+    // Update word frequency
+    let wordFreq = { ...get().searchWordFrequency };
+    words.forEach(word => {
+      wordFreq[word] = (wordFreq[word] || 0) + 1;
+    });
+
     set({
-      searchString
-    })
+      searchString,
+      searchHistory: history,
+      searchWordFrequency: wordFreq
+    });
   },
   
   createItem: async (newItem) => {
