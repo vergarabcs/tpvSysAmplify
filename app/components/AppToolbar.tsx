@@ -1,8 +1,9 @@
 "use client";
 
-import { View, Flex, Button, Text, useTheme, Input } from '@aws-amplify/ui-react';
+import { View, Flex, Button, Text, useTheme, Input, SearchField } from '@aws-amplify/ui-react';
 import { usePathname } from 'next/navigation';
 import { useItemsStore } from '../store';
+import { useRef } from 'react';
 
 interface AppToolbarProps {
   onOptions?: () => void;
@@ -19,6 +20,16 @@ export function AppToolbar({
   const searchString = useItemsStore(state => state.searchString)
   const pathname = usePathname();
   const setShowCreateModal = useItemsStore(state => state.setShowCreateModal);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Debounced search setter
+  const handleSearchChange = (e: any) => {
+    const value = e.target.value;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setSearchString(value);
+    }, 2000);
+  };
 
   // Example: change toolbar buttons based on page
   // You can expand this logic for more complex needs
@@ -41,7 +52,7 @@ export function AppToolbar({
             placeholder="Search..."
             backgroundColor={tokens.colors.primary[20].value}
             value={searchString}
-            onChange={e => setSearchString(e.target.value)}
+            onChange={handleSearchChange}
           />
         </View>
       )}
