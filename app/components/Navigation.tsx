@@ -44,7 +44,7 @@ export function Navigation({ children }: NavigationProps) {
   const menuItems = [
     { name: 'Items', path: '/items', icon: MdInventory },
     // { name: 'Cart', path: '/cart', icon: MdShoppingCart },
-    // { name: 'Receive Stock', path: '/receive-stock', icon: MdInventory },
+    // { name: 'Purchase Records', path: '/purchase-records', icon: MdInventory },
     // { name: 'Reports', path: '/reports', icon: MdBarChart },
     // { name: 'Suppliers', path: '/suppliers', icon: MdPeople },
     // { name: 'Customers', path: '/customers', icon: MdPeople },
