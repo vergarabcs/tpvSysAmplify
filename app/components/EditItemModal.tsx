@@ -13,27 +13,14 @@ import {
 import "@aws-amplify/ui-react/styles.css";
 import { ItemFormFields } from "./ItemFormFields";
 import { validateItemForm } from "./itemFormValidation";
+import { useItemsStore } from "../store/itemsStore";
 
-interface Item {
-  id: string;
-  description: string;
-  sell_price: number;
-  quantity: number;
-  low_stock_qty: number;
-  img?: string;
-  qr?: string;
-  tags?: string;
-}
-
-interface EditItemModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (item: Item) => void;
-  item: Item;
-}
-
-export function EditItemModal({ isOpen, onClose, onSave, item }: EditItemModalProps) {
+export function EditItemModal() {
   const { tokens } = useTheme();
+  const isOpen = useItemsStore((state) => state.showEditModal);
+  const onClose = () => useItemsStore.getState().setShowEditModal(false);
+  const onSave = useItemsStore((state) => state.updateItem);
+  const item = useItemsStore((state) => state.selectedItem);
   const [formData, setFormData] = useState({
     description: "",
     sell_price: "",
@@ -88,7 +75,7 @@ export function EditItemModal({ isOpen, onClose, onSave, item }: EditItemModalPr
   };
 
   if (!isOpen) return null;
-  
+
   return (
     <View
       position="fixed"
@@ -100,9 +87,9 @@ export function EditItemModal({ isOpen, onClose, onSave, item }: EditItemModalPr
       style={{ zIndex: 100 }}
       onClick={onClose}
     >
-      <Flex 
-        justifyContent="center" 
-        alignItems="center" 
+      <Flex
+        justifyContent="center"
+        alignItems="center"
         height="100%"
       >
         <Card
@@ -116,9 +103,9 @@ export function EditItemModal({ isOpen, onClose, onSave, item }: EditItemModalPr
             <Heading level={3}>
               Edit Item
             </Heading>
-            
+
             <Divider />
-            
+
             <Flex direction="column" gap={tokens.space.medium}>
               <ItemFormFields
                 formData={formData}
@@ -126,9 +113,9 @@ export function EditItemModal({ isOpen, onClose, onSave, item }: EditItemModalPr
                 onInputChange={handleInputChange}
               />
             </Flex>
-            
+
             <Divider />
-            
+
             <Flex justifyContent="flex-end" gap={tokens.space.xs}>
               <Button variation="link" onClick={onClose}>
                 Cancel

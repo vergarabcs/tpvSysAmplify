@@ -13,15 +13,14 @@ import {
 import "@aws-amplify/ui-react/styles.css";
 import { ItemFormFields } from "./ItemFormFields";
 import { validateItemForm } from "./itemFormValidation";
+import { useItemsStore } from "../store/itemsStore";
 
-interface CreateItemModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (item: any) => void;
-}
-
-export function CreateItemModal({ isOpen, onClose, onSave }: CreateItemModalProps) {
+export function CreateItemModal() {
   const { tokens } = useTheme();
+  const isOpen = useItemsStore((state) => state.showCreateModal);
+  const onClose = () => useItemsStore.getState().setShowCreateModal(false);
+  const onSave = useItemsStore((state) => state.createItem);
+
   const [formData, setFormData] = useState({
     description: "",
     sell_price: "",
@@ -82,7 +81,7 @@ export function CreateItemModal({ isOpen, onClose, onSave }: CreateItemModalProp
   };
 
   if (!isOpen) return null;
-  
+
   return (
     <View
       position="fixed"
@@ -94,11 +93,7 @@ export function CreateItemModal({ isOpen, onClose, onSave }: CreateItemModalProp
       style={{ zIndex: 100 }}
       onClick={handleClose}
     >
-      <Flex 
-        justifyContent="center" 
-        alignItems="center" 
-        height="100%"
-      >
+      <Flex justifyContent="center" alignItems="center" height="100%">
         <Card
           width={{ base: "90%", medium: "600px" }}
           padding={tokens.space.medium}
@@ -107,12 +102,10 @@ export function CreateItemModal({ isOpen, onClose, onSave }: CreateItemModalProp
           variation="elevated"
         >
           <Flex direction="column" gap={tokens.space.medium}>
-            <Heading level={3}>
-              Add New Item
-            </Heading>
-            
+            <Heading level={3}>Add New Item</Heading>
+
             <Divider />
-            
+
             <Flex direction="column" gap={tokens.space.medium}>
               <ItemFormFields
                 formData={formData}
@@ -120,9 +113,9 @@ export function CreateItemModal({ isOpen, onClose, onSave }: CreateItemModalProp
                 onInputChange={handleInputChange}
               />
             </Flex>
-            
+
             <Divider />
-            
+
             <Flex justifyContent="flex-end" gap={tokens.space.xs}>
               <Button variation="link" onClick={handleClose}>
                 Cancel
