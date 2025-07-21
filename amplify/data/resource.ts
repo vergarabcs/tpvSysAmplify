@@ -1,23 +1,40 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
-/*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any user authenticated via an API key can "create", "read",
-"update", and "delete" any "Todo" records.
-=========================================================================*/
 const schema = a.schema({
-  Item: a
-    .model({
-      description: a.string(),
-      sell_price: a.float().default(999999),
-      quantity: a.float().default(999999),
-      low_stock_qty: a.float().default(999999),
-      img: a.string(),
-      qr: a.string(), // S3 key or URL
-      tags: a.string(), // comma-separated tags
-    })
-    .authorization((allow) => [allow.publicApiKey()])
+  PurchaseRecord: a.model({
+    itemId: a.id(),
+    item: a.belongsTo('Item', 'itemId'),
+    buy_price: a.float().required(),
+    quantity: a.float().default(1),
+    purchased_at: a.datetime().default("1970-01-01T00:00:00Z"),
+    notes: a.string(),
+    suppliers: a.hasMany('SupplierPurchaseRecord', 'purchaseRecordId'),
+  }).authorization((allow) => [allow.publicApiKey()]),
+  Item: a.model({
+    description: a.string(),
+    sell_price: a.float().default(999999),
+    quantity: a.float().default(999999),
+    low_stock_qty: a.float().default(999999),
+    img: a.string(),
+    qr: a.string(), // S3 key or URL
+    tags: a.string(), // comma-separated tags
+    purchaseRecords: a.hasMany('PurchaseRecord', 'itemId'),
+  }).authorization((allow) => [allow.publicApiKey()]),
+  SupplierPurchaseRecord: a.model({
+    supplierId: a.id().required(),
+    purchaseRecordId: a.id().required(),
+    supplier: a.belongsTo('Supplier', 'supplierId'),
+    purchaseRecord: a.belongsTo('PurchaseRecord', 'purchaseRecordId'),
+  }).authorization((allow) => [allow.publicApiKey()]),
+  Supplier: a.model({
+    name: a.string().required(),
+    contact: a.string(),
+    email: a.string(),
+    phone: a.string(),
+    address: a.string(),
+    purchaseRecords: a.hasMany('SupplierPurchaseRecord', 'supplierId'),
+  }).authorization((allow) => [allow.publicApiKey()])
+    
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -31,32 +48,3 @@ export const data = defineData({
     },
   },
 });
-
-/*== STEP 2 ===============================================================
-Go to your frontend source code. From your client-side code, generate a
-Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
-WORK IN THE FRONTEND CODE FILE.)
-
-Using JavaScript or Next.js React Server Components, Middleware, Server
-Actions or Pages Router? Review how to generate Data clients for those use
-cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
-=========================================================================*/
-
-/*
-"use client"
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-
-const client = generateClient<Schema>() // use this Data client for CRUDL requests
-*/
-
-/*== STEP 3 ===============================================================
-Fetch records from the database and use them in your frontend component.
-(THIS SNIPPET WILL ONLY WORK IN THE FRONTEND CODE FILE.)
-=========================================================================*/
-
-/* For example, in a React component, you can use this snippet in your
-  function's RETURN statement */
-// const { data: todos } = await client.models.Todo.list()
-
-// return <ul>{todos.map(todo => <li key={todo.id}>{todo.content}</li>)}</ul>
