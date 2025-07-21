@@ -74,7 +74,7 @@ export function AppToolbar({
           </datalist>
         </View>
       )}
-      <Flex gap={tokens.space.xs}>
+      <Flex gap={tokens.space.xxxs}>
         {showAdd && (
           <Button
             aria-label="Add item"
@@ -85,18 +85,6 @@ export function AppToolbar({
             onClick={onAdd}
           >
             <Text fontSize="1.5rem">+</Text>
-          </Button>
-        )}
-        {showOptions && (
-          <Button
-            aria-label="View options"
-            backgroundColor="transparent"
-            color="white"
-            size="small"
-            variation="link"
-            onClick={onOptions}
-          >
-            <Text fontSize="1.5rem">≡</Text>
           </Button>
         )}
         {showRefresh && (

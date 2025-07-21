@@ -101,26 +101,28 @@ export default function ItemsPage() {
                 <Flex 
                   direction="row"
                   width="100%"
+                  height="100%"
+                  gap={tokens.space.xxxs}
                   padding={0}
                   backgroundColor="white"
-                  style={{ borderBottom: "1px solid #eaeaea" }}
+                  style={{ borderBottom: "2px solid #eaeaea" }}
                   onClick={() => openEditModal(item)}
                 >
-                  <View flex="1" padding={tokens.space.small}>
-                    <Text fontSize={tokens.fontSizes.medium} fontWeight="bold">
+                  <View flex="2" padding={tokens.space.xxxs}>
+                    <Text fontSize={tokens.fontSizes.small} fontWeight="bold">
                       <HighLightedText searchString={searchString}>
                         {item.description}
                       </HighLightedText>
                     </Text>
                   </View>
-                  <Flex direction="column" padding={tokens.space.xs} justifyContent="center" alignItems="flex-end" minWidth="100px">
+                  <Flex flex="0.5" direction="column" padding={tokens.space.xs} justifyContent="start" alignItems="flex-end">
                     <Text fontWeight="bold">₱ {item.sell_price}</Text>
                     <Text>Qty: {item.quantity}</Text>
                   </Flex>
                   <View
-                    width="120px"
-                    height="100px"
                     backgroundColor="#ccc"
+                    width="90px"
+                    height="90px"
                     style={{
                       display: "flex",
                       alignItems: "center",
