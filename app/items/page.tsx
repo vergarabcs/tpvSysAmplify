@@ -26,17 +26,12 @@ export default function ItemsPage() {
   const { 
     items,
     loading,
-    showCreateModal, 
     selectedItem,
-    showEditModal,
     showDeleteModal,
     error,
     observeItems,
-    createItem,
-    updateItem,
     deleteItem,
     setSelectedItem,
-    setShowCreateModal,
     setShowEditModal,
     setShowDeleteModal,
   } = useItemsStore();
@@ -138,23 +133,11 @@ export default function ItemsPage() {
         </List>
       )}
 
-      <CreateItemModal 
-        isOpen={showCreateModal} 
-        onClose={() => setShowCreateModal(false)}
-        onSave={createItem}
-      />
+      <CreateItemModal/>
 
       {selectedItem && (
         <>
-          <EditItemModal
-            isOpen={showEditModal}
-            onClose={() => {
-              setShowEditModal(false);
-              setSelectedItem(null);
-            }}
-            item={selectedItem}
-            onSave={updateItem}
-          />
+          <EditItemModal/>
 
           <DeleteItemModal
             isOpen={showDeleteModal}

@@ -62,7 +62,7 @@ export function EditItemModal() {
   };
 
   const handleSubmit = () => {
-    if (validateForm()) {
+    if (item && validateForm()) {
       onSave({
         ...item,
         description: formData.description,
