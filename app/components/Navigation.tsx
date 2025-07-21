@@ -43,14 +43,14 @@ export function Navigation({ children }: NavigationProps) {
 
   const menuItems = [
     { name: 'Items', path: '/items', icon: MdInventory },
-    { name: 'Cart', path: '/cart', icon: MdShoppingCart },
-    { name: 'Receive Stock', path: '/receive-stock', icon: MdInventory },
-    { name: 'Reports', path: '/reports', icon: MdBarChart },
-    { name: 'Suppliers', path: '/suppliers', icon: MdPeople },
-    { name: 'Customers', path: '/customers', icon: MdPeople },
-    { name: 'Settings', path: '/settings', icon: MdSettings },
-    { name: 'Change My Password', path: '/change-password', icon: MdLock },
-    { name: 'Sign Out', path: '/signout', icon: MdLogout },
+    // { name: 'Cart', path: '/cart', icon: MdShoppingCart },
+    // { name: 'Receive Stock', path: '/receive-stock', icon: MdInventory },
+    // { name: 'Reports', path: '/reports', icon: MdBarChart },
+    // { name: 'Suppliers', path: '/suppliers', icon: MdPeople },
+    // { name: 'Customers', path: '/customers', icon: MdPeople },
+    // { name: 'Settings', path: '/settings', icon: MdSettings },
+    // { name: 'Change My Password', path: '/change-password', icon: MdLock },
+    // { name: 'Sign Out', path: '/signout', icon: MdLogout },
   ];
 
   // toggleDrawer is now provided by the navigation store
