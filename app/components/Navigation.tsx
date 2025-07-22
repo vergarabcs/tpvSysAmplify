@@ -28,13 +28,6 @@ export function Navigation({ children }: NavigationProps) {
   const pathname = usePathname();
   const { tokens } = useTheme();
 
-  const observeItems = useItemsStore(state => state.observeItems)
-  
-  useEffect(() => {
-    const unsubscribe = observeItems()
-    return unsubscribe
-  }, [observeItems]);
-
   // Close drawer when route changes
   useEffect(() => {
     closeDrawer();
