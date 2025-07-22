@@ -44,7 +44,7 @@ export function Navigation({ children }: NavigationProps) {
   const menuItems = [
     { name: 'Items', path: '/items', icon: MdInventory },
     // { name: 'Cart', path: '/cart', icon: MdShoppingCart },
-    // { name: 'Purchase Records', path: '/purchase-records', icon: MdInventory },
+    { name: 'Purchase Records', path: '/purchase-records', icon: MdInventory },
     // { name: 'Reports', path: '/reports', icon: MdBarChart },
     // { name: 'Suppliers', path: '/suppliers', icon: MdPeople },
     // { name: 'Customers', path: '/customers', icon: MdPeople },
@@ -121,7 +121,7 @@ export function Navigation({ children }: NavigationProps) {
               boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
             >
               <Heading level={3} marginBottom={tokens.space.medium}>
-                TPV System
+                Store Name
               </Heading>
               <Flex direction="column" gap={tokens.space.xs}>
                 {menuItems.map((item) => (

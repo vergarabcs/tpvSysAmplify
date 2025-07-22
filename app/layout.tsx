@@ -6,7 +6,7 @@ import { ToastProvider } from "./components/ToastProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TPV System",
+  title: "Store Name",
   description: "Point of Sale System built with Next.js and AWS Amplify",
 };
 
