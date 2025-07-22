@@ -17,13 +17,13 @@ import {
   MdArrowBack
 } from "react-icons/md";
 import { useItemsStore, useNavigationStore } from '../store';
-import { AppToolbar } from './AppToolbar';
 
 interface NavigationProps {
   children: React.ReactNode;
+  toolbar?: React.ReactNode;
 }
 
-export function Navigation({ children }: NavigationProps) {
+export function Navigation({ children, toolbar }: NavigationProps) {
   const { isDrawerOpen, closeDrawer, toggleDrawer } = useNavigationStore();
   const pathname = usePathname();
   const { tokens } = useTheme();
@@ -80,8 +80,8 @@ export function Navigation({ children }: NavigationProps) {
             <Icon as={MdMenu} fontSize="1.5rem" />
           </Button>
         )}
-        {/* Toolbar region extracted to AppToolbar */}
-        <AppToolbar />
+        {/* Toolbar region injected via prop */}
+        {toolbar}
       </Flex>
 
       {/* Content area with optional drawer */}
