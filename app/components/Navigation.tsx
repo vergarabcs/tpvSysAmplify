@@ -7,24 +7,16 @@ import {
   Heading,
   Button,
   Icon,
-  useTheme,
-  Text
+  useTheme
 } from '@aws-amplify/ui-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   MdMenu, 
-  MdClose, 
-  MdShoppingCart, 
   MdInventory, 
-  MdBarChart, 
-  MdPeople, 
-  MdSettings, 
-  MdLock, 
-  MdLogout,
   MdArrowBack
 } from "react-icons/md";
-import { useNavigationStore } from '../store';
+import { useItemsStore, useNavigationStore } from '../store';
 import { AppToolbar } from './AppToolbar';
 
 interface NavigationProps {
@@ -35,6 +27,13 @@ export function Navigation({ children }: NavigationProps) {
   const { isDrawerOpen, closeDrawer, toggleDrawer } = useNavigationStore();
   const pathname = usePathname();
   const { tokens } = useTheme();
+
+  const observeItems = useItemsStore(state => state.observeItems)
+  
+  useEffect(() => {
+    const unsubscribe = observeItems()
+    return unsubscribe
+  }, [observeItems]);
 
   // Close drawer when route changes
   useEffect(() => {
