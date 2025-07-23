@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '@/amplify/data/resource';
+import toast from 'react-hot-toast';
 
 const client = generateClient<Schema>();
 
@@ -91,11 +92,14 @@ export const usePurchaseRecordsStore = create<PurchaseRecordsState>((set, get) =
   createRecord: async (data) => {
     set({ loading: true, error: null });
     try {
-      await client.models.PurchaseRecord.create(data);
+      const response = await client.models.PurchaseRecord.create(data);
+      if(response?.errors?.length && response?.errors?.length > 0){
+        throw response.errors?.map(error => error.message).join(' ')
+      }
       // After creation, refresh list
       await get().fetchRecords();
     } catch (e) {
-      set({ error: 'Failed to create purchase record.' });
+      toast.error('Failed to create purchase record.' + e)
     } finally {
       set({ loading: false });
     }
