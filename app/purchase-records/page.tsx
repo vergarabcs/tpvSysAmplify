@@ -64,7 +64,7 @@ export default function PurchaseRecordsPage() {
   }, [filterItem, filterStart, filterEnd, resetPagination]);
 
   return (
-    <View padding={tokens.space.medium} width="100%" maxWidth={900} margin="0 auto">
+    <View padding={tokens.space.xxxs} width="100%" maxWidth={900} margin="0 auto">
       {/* <PurchaseRecordsToolbar
         onCreated={fetchRecords}
         filterItem={filterItem}
@@ -76,30 +76,75 @@ export default function PurchaseRecordsPage() {
       /> */}
       <Divider margin={tokens.space.medium} />
       {/* List */}
-      <Card variation="outlined">
+      <Card variation="outlined" padding={tokens.space.xxxs}>
         <Flex direction="column" gap={tokens.space.small}>
           {loading ? (
-            <Loader />
+            <Flex justifyContent="center" padding={tokens.space.large}>
+              <Loader size="large" />
+            </Flex>
           ) : error ? (
-            <Text color={tokens.colors.red[80]}>{error}</Text>
+            <Text color={tokens.colors.red[80]} padding={tokens.space.medium}>{error}</Text>
           ) : records.length === 0 ? (
-            <Text>No purchase records found.</Text>
+            <Text padding={tokens.space.medium} textAlign="center">No purchase records found.</Text>
           ) : (
-            records.map((rec, idx) => (
-              <View key={rec.id || idx} padding={tokens.space.xs} style={{ borderBottom: "1px solid #eee" }}>
-                <Flex direction="row" gap={tokens.space.medium} alignItems="center">
-                  <Text fontWeight="bold">{items.find(i => i.id === rec.itemId)?.description || rec.itemId}</Text>
-                  <Text>₱ {rec.buy_price}</Text>
-                  <Text>Qty: {rec.quantity}</Text>
-                  <Text>Date: {rec.purchased_at ? new Date(rec.purchased_at).toLocaleDateString() : "-"}</Text>
-                  {rec.notes && <Text color="#666">Notes: {rec.notes}</Text>}
-                </Flex>
-              </View>
-            ))
+            <Flex direction="column" gap={tokens.space.medium} padding={tokens.space.xxxs}>
+              {records.map((rec, idx) => {
+                const item = items.find(i => i.id === rec.itemId);
+                const purchaseDate = rec.purchased_at ? new Date(rec.purchased_at).toLocaleDateString() : "-";
+                
+                return (
+                  <Card 
+                    key={rec.id || idx} 
+                    variation="elevated"
+                    padding={tokens.space.small}
+                  >
+                    <Flex direction="column" gap={tokens.space.xs}>
+                      <Text 
+                        fontWeight="bold" 
+                        fontSize="1.1rem" 
+                        color={tokens.colors.font.primary}
+                      >
+                        {item?.description || 
+                          <Text as="span" color={tokens.colors.font.tertiary}>
+                            {rec.itemId.substring(0, 8)}...
+                          </Text>
+                        }
+                      </Text>
+                      
+                      <Flex direction="row" justifyContent="space-between" wrap="wrap" marginTop={tokens.space.xs}>
+                        <Flex gap={tokens.space.large} alignItems="center">
+                          <Flex direction="column">
+                            <Text fontSize="0.8rem" color={tokens.colors.font.tertiary}>Price</Text>
+                            <Text fontWeight="medium">₱ {rec.buy_price.toFixed(2)}</Text>
+                          </Flex>
+                          
+                          <Flex direction="column">
+                            <Text fontSize="0.8rem" color={tokens.colors.font.tertiary}>Quantity</Text>
+                            <Text fontWeight="medium">{rec.quantity}</Text>
+                          </Flex>
+                          
+                          <Flex direction="column">
+                            <Text fontSize="0.8rem" color={tokens.colors.font.tertiary}>Date</Text>
+                            <Text fontWeight="medium">{purchaseDate}</Text>
+                          </Flex>
+                        </Flex>
+                        
+                        {rec.notes && (
+                          <Flex direction="column" marginTop={tokens.space.xs}>
+                            <Text fontSize="0.8rem" color={tokens.colors.font.tertiary}>Notes</Text>
+                            <Text fontStyle="italic" color={tokens.colors.font.secondary}>{rec.notes}</Text>
+                          </Flex>
+                        )}
+                      </Flex>
+                    </Flex>
+                  </Card>
+                );
+              })}
+            </Flex>
           )}
         </Flex>
         <Divider marginTop={tokens.space.medium} marginBottom={tokens.space.medium} />
-        <Flex justifyContent="center">
+        <Flex justifyContent="center" padding={tokens.space.small}>
           <Pagination
             currentPage={page}
             totalPages={hasNext ? page + 1 : page}

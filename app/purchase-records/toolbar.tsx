@@ -26,7 +26,7 @@ export function PurchaseRecordsToolbar() {
       <Button color='white' onClick={() => setShowFilter(true)}>
         Filter
       </Button>
-      <Button onClick={() => fetchRecords()}>
+      <Button color='white' onClick={() => fetchRecords()}>
         Reload
       </Button>
       <CreateModal

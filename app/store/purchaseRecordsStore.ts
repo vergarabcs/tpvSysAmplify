@@ -42,7 +42,7 @@ export const usePurchaseRecordsStore = create<PurchaseRecordsState>((set, get) =
   page: 1,
   nextToken: null,
   prevTokens: [],
-  pageSize: 10,
+  pageSize: 50,
   hasNext: false,
   filterItem: '',
   filterStart: null,
