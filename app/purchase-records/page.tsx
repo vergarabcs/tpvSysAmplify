@@ -64,7 +64,7 @@ export default function PurchaseRecordsPage() {
   }, [filterItem, filterStart, filterEnd, resetPagination]);
 
   return (
-    <View padding={tokens.space.xxxs} width="100%" maxWidth={900} margin="0 auto">
+    <View padding={tokens.space.xxxs} width="100%">
       {/* <PurchaseRecordsToolbar
         onCreated={fetchRecords}
         filterItem={filterItem}
@@ -74,7 +74,7 @@ export default function PurchaseRecordsPage() {
         setFilterStart={setFilterStart}
         setFilterEnd={setFilterEnd}
       /> */}
-      <Divider margin={tokens.space.medium} />
+      <Divider marginBottom={tokens.space.medium} />
       {/* List */}
       <Card variation="outlined" padding={tokens.space.xxxs}>
         <Flex direction="column" gap={tokens.space.small}>

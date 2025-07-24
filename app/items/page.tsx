@@ -50,11 +50,6 @@ export default function ItemsPage() {
     setShowEditModal(true);
   };
 
-  const openDeleteModal = (item: Item) => {
-    setSelectedItem(item);
-    setShowDeleteModal(true);
-  };
-
   return (
     <View padding={0} width="100%">
       {error && (

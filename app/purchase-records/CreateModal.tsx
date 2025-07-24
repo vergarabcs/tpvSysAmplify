@@ -131,7 +131,7 @@ export function CreateModal({
         {formError && <Text color={tokens.colors.red[80]} fontSize="0.95em">{formError}</Text>}
       </Flex>
       <Flex gap={tokens.space.small} marginTop={tokens.space.large} justifyContent="flex-end">
-        <Button onClick={handleCreate} isLoading={creating} variation="primary" borderRadius={8} padding={tokens.space.large}>Create</Button>
+        <Button onClick={handleCreate} isLoading={creating} variation="primary" borderRadius={8}>Create</Button>
         <Button onClick={onClose} variation="link" borderRadius={8}>Cancel</Button>
       </Flex>
     </Modal>
