@@ -92,7 +92,14 @@ export const usePurchaseRecordsStore = create<PurchaseRecordsState>((set, get) =
   createRecord: async (data) => {
     set({ loading: true, error: null });
     try {
-      const response = await client.models.PurchaseRecord.create(data);
+      // Use the custom mutation for atomic transaction
+      const response = await client.mutations.CreatePurchaseRecordAndUpdateItem({
+        itemId: data.itemId,
+        buy_price: data.buy_price,
+        quantity: data.quantity,
+        purchased_at: data.purchased_at,
+        notes: data.notes ?? null,
+      });
       if(response?.errors?.length && response?.errors?.length > 0){
         throw response.errors?.map(error => error.message).join(' ')
       }

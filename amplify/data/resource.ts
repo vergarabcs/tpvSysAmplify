@@ -33,8 +33,26 @@ const schema = a.schema({
     phone: a.string(),
     address: a.string(),
     purchaseRecords: a.hasMany('SupplierPurchaseRecord', 'supplierId'),
-  }).authorization((allow) => [allow.publicApiKey()])
-    
+  }).authorization((allow) => [allow.publicApiKey()]),
+
+  // Custom mutation for atomic transaction
+  CreatePurchaseRecordAndUpdateItem: a
+    .mutation()
+    .arguments({
+      itemId: a.id().required(),
+      buy_price: a.float().required(),
+      quantity: a.float().required(),
+      purchased_at: a.datetime().required(),
+      notes: a.string(), // optional by default
+    })
+    .returns(a.ref('PurchaseRecord'))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(
+      a.handler.custom({
+        dataSource: a.ref('PurchaseRecord'),
+        entry: './CreatePurchaseRecordAndUpdateItemHandler.js',
+      })
+    ),
 });
 
 export type Schema = ClientSchema<typeof schema>;
