@@ -100,6 +100,11 @@ export const usePurchaseRecordsStore = create<PurchaseRecordsState>((set, get) =
         purchased_at: data.purchased_at,
         notes: data.notes ?? null,
       });
+
+      // trigger update on observers
+      await client.models.Item.update({
+        id: data.itemId
+      });
       if(response?.errors?.length && response?.errors?.length > 0){
         throw response.errors?.map(error => error.message).join(' ')
       }
