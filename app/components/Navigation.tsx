@@ -7,31 +7,23 @@ import {
   Heading,
   Button,
   Icon,
-  useTheme,
-  Text
+  useTheme
 } from '@aws-amplify/ui-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   MdMenu, 
-  MdClose, 
-  MdShoppingCart, 
   MdInventory, 
-  MdBarChart, 
-  MdPeople, 
-  MdSettings, 
-  MdLock, 
-  MdLogout,
   MdArrowBack
 } from "react-icons/md";
-import { useNavigationStore } from '../store';
-import { AppToolbar } from './AppToolbar';
+import { useItemsStore, useNavigationStore } from '../store';
 
 interface NavigationProps {
   children: React.ReactNode;
+  toolbar?: React.ReactNode;
 }
 
-export function Navigation({ children }: NavigationProps) {
+export function Navigation({ children, toolbar }: NavigationProps) {
   const { isDrawerOpen, closeDrawer, toggleDrawer } = useNavigationStore();
   const pathname = usePathname();
   const { tokens } = useTheme();
@@ -44,7 +36,7 @@ export function Navigation({ children }: NavigationProps) {
   const menuItems = [
     { name: 'Items', path: '/items', icon: MdInventory },
     // { name: 'Cart', path: '/cart', icon: MdShoppingCart },
-    // { name: 'Purchase Records', path: '/purchase-records', icon: MdInventory },
+    { name: 'Purchase Records', path: '/purchase-records', icon: MdInventory },
     // { name: 'Reports', path: '/reports', icon: MdBarChart },
     // { name: 'Suppliers', path: '/suppliers', icon: MdPeople },
     // { name: 'Customers', path: '/customers', icon: MdPeople },
@@ -88,8 +80,8 @@ export function Navigation({ children }: NavigationProps) {
             <Icon as={MdMenu} fontSize="1.5rem" />
           </Button>
         )}
-        {/* Toolbar region extracted to AppToolbar */}
-        <AppToolbar />
+        {/* Toolbar region injected via prop */}
+        {toolbar}
       </Flex>
 
       {/* Content area with optional drawer */}
@@ -121,7 +113,7 @@ export function Navigation({ children }: NavigationProps) {
               boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
             >
               <Heading level={3} marginBottom={tokens.space.medium}>
-                TPV System
+                Store Name
               </Heading>
               <Flex direction="column" gap={tokens.space.xs}>
                 {menuItems.map((item) => (

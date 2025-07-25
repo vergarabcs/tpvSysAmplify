@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import {
-  Button,
   Flex,
   Text,
   View,
@@ -16,7 +14,7 @@ import { CreateItemModal } from "../components/CreateItemModal";
 import { EditItemModal } from "../components/EditItemModal";
 import { DeleteItemModal } from "../components/DeleteItemModal";
 import { HighLightedText } from "../components/HighLightedText";
-import { useItemsStore, useCartStore, Item } from "../store";
+import { useItemsStore, Item } from "../store";
 import { FixedSizeList as List } from "react-window";
 
 Amplify.configure(outputs);
@@ -29,7 +27,6 @@ export default function ItemsPage() {
     selectedItem,
     showDeleteModal,
     error,
-    observeItems,
     deleteItem,
     setSelectedItem,
     setShowEditModal,
@@ -38,8 +35,6 @@ export default function ItemsPage() {
 
   const searchString = useItemsStore(state => state.searchString)
   const filteredItems = getFiltered(items, searchString)
-
-  const { addItem } = useCartStore();
 
   const isMobile = useBreakpointValue({
     base: true,
@@ -50,19 +45,9 @@ export default function ItemsPage() {
 
   const { tokens } = useTheme();
 
-  useEffect(() => {
-    const unsubscribe = observeItems()
-    return unsubscribe
-  }, [observeItems]);
-
   const openEditModal = (item: Item) => {
     setSelectedItem(item);
     setShowEditModal(true);
-  };
-
-  const openDeleteModal = (item: Item) => {
-    setSelectedItem(item);
-    setShowDeleteModal(true);
   };
 
   return (

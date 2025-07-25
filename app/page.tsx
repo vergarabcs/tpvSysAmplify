@@ -8,13 +8,13 @@ import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
 import { redirect } from 'next/navigation';
-import { Card, Collection, Flex, Heading, Text, View, useTheme, Image } from "@aws-amplify/ui-react";
 
 Amplify.configure(outputs);
 
 const client = generateClient<Schema>();
 
 export default function App() {
+
   // Redirect to items page
   useEffect(() => {
     redirect('/items');
