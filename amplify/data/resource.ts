@@ -9,7 +9,11 @@ const schema = a.schema({
     purchased_at: a.datetime().default("1970-01-01T00:00:00Z"),
     notes: a.string(),
     suppliers: a.hasMany('SupplierPurchaseRecord', 'purchaseRecordId'),
-  }).authorization((allow) => [allow.publicApiKey()]),
+    createdAt: a.datetime(),
+    updatedAt: a.datetime(),
+  })
+    .authorization((allow) => [allow.publicApiKey()])
+    .secondaryIndexes((index) => [index('createdAt')]),
   Item: a.model({
     description: a.string(),
     sell_price: a.float().default(999999),
